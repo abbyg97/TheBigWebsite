@@ -90,6 +90,7 @@ CREATE TABLE volunteers (
     vol_number int  NOT NULL,
     first_name varchar(20)  NOT NULL,
     last_name varchar(20)  NOT NULL,
+    email varchar(50) NOT NULL,
     provide_transport varchar(3)  NOT NULL,
     restrictions varchar(100) NULL,
     phone_numbers varchar(12)  NOT NULL,
