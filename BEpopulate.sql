@@ -9,7 +9,8 @@ INSERT INTO Committee_Members VALUES (1, "Abby", "Garrett"), (2, "Sarah", "Smith
 
 INSERT INTO Approvals VALUES (1, 1, "no", "none", 1), (1, 1, "no", "none", 2), (1, 2, "no", "none", 3);
 
-INSERT INTO Organization VALUES (1, "Chi Omega", 457), (2, "STAMPS", 30);
+--https://stackoverflow.com/questions/3635166/how-to-import-csv-file-to-mysql-table
+LOAD DATA LOCAL INFILE "/home/agarrett/organizationsCSV.csv" INTO TABLE Organization FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' (number, name, total_members);
 
 INSERT INTO Team_Leaders VALUES (1, "Hunter", "Johnson", "6016240922", "hjohnson@go.com", 1), (2, "Haleigh", "Hunter", "7314137347", "hurt@gmail.com", 1), (3, "Abby", "Garrett", "2053545133", "agarrett@gmail.com", 1);
 
