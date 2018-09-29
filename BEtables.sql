@@ -11,6 +11,10 @@ DROP TABLE IF EXISTS Organization;
 
 DROP TABLE IF EXISTS Projects;
 
+DROP TABLE IF EXISTS proj_category;
+
+DROP TABLE IF EXISTS proj_restriction;
+
 DROP TABLE IF EXISTS Transportation;
 
 DROP TABLE IF EXISTS Host;
@@ -66,8 +70,20 @@ CREATE TABLE Projects (
     additional_comments varchar(250)  NULL,
     rain varchar(3)  NOT NULL,
     rain_proj varchar(100) NULL,
-    restriction_violation varchar(45)  NULL,
+    restriction_violation int  NULL,
     CONSTRAINT Projects_pk PRIMARY KEY (Project_Number)
+);
+
+CREATE TABLE proj_restriction (
+  number int  NOT NULL,
+  restriction varchar(50)  NOT NULL,
+  CONSTRAINT proj_restict_pk PRIMARY KEY (number)
+);
+
+CREATE TABLE proj_category (
+  number int  NOT NULL,
+  cat varchar(50)  NOT NULL,
+  CONSTRAINT proj_cat_pk PRIMARY KEY (number)
 );
 
 CREATE TABLE Team_Leaders (
@@ -118,6 +134,16 @@ ALTER TABLE Projects ADD CONSTRAINT Projects_Host
 ALTER TABLE Projects ADD CONSTRAINT Projects_Transportation
     FOREIGN KEY (transportation)
     REFERENCES Transportation (number)
+;
+
+ALTER TABLE Projects ADD CONSTRAINT Projects_restrict
+    FOREIGN KEY (restriction_violation)
+    REFERENCES proj_restriction (number)
+;
+
+ALTER TABLE Projects ADD CONSTRAINT Projects_cat
+    FOREIGN KEY (category)
+    REFERENCES proj_category (number)
 ;
 
 -- Reference: Team_Leaders_Projects (table: Team_Leaders)
