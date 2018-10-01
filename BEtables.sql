@@ -70,7 +70,7 @@ CREATE TABLE Projects (
     additional_comments varchar(250)  NULL,
     rain varchar(3)  NOT NULL,
     rain_proj varchar(100) NULL,
-    restriction_violation int  NULL,
+    restriction_violation varchar(100)  NULL,
     CONSTRAINT Projects_pk PRIMARY KEY (Project_Number)
 );
 
@@ -136,10 +136,10 @@ ALTER TABLE Projects ADD CONSTRAINT Projects_Transportation
     REFERENCES Transportation (number)
 ;
 
-ALTER TABLE Projects ADD CONSTRAINT Projects_restrict
-    FOREIGN KEY (restriction_violation)
-    REFERENCES proj_restriction (number)
-;
+-- ALTER TABLE Projects ADD CONSTRAINT Projects_restrict
+--     FOREIGN KEY (restriction_violation)
+--     REFERENCES proj_restriction (number)
+-- ;
 
 ALTER TABLE Projects ADD CONSTRAINT Projects_cat
     FOREIGN KEY (category)
