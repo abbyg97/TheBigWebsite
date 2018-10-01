@@ -174,25 +174,15 @@
 						// echo "First Name:<input type='text' name='fname' value='' />";
 						echo "Select your first name:<select name='fname'>";
 							echo "<option value = 'all'>Select All</option>";
-								$query = "Select first_name from Host";
+								$query = "Select first_name, last_name from Host";
 								$result = $mysqli->query($query);
 								if($result && $result->num_rows >= 1){
 									while($row=$result->fetch_assoc()){
-										echo "<option value = '".$row['first_name']."'>".$row['first_name']."</option>";
+										echo "<option value = '".$row['first_name']." ".$row["last_name"]."'>".$row['first_name']." ".$row['last_name']."</option>";
 									}
 								}
 						echo "</select>";
 
-						echo "Select your last name:<select name='lname'>";
-							echo "<option value = 'none'>Select All</option>";
-								$query = "Select last_name from Host";
-								$result = $mysqli->query($query);
-								if($result && $result->num_rows >= 1){
-									while($row=$result->fetch_assoc()){
-										echo "<option value = '".$row['last_name']."'>".$row['last_name']."</option>";
-									}
-								}
-						echo "</select>";
 
 					echo "<input type='submit' name='submit' class='button tiny round' value='Find Volunteers'>";
 					echo "<br />";
