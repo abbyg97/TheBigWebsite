@@ -7,11 +7,13 @@
 		echo $output;
 	}
 
-  $query="SELECT Project_number AS 'num', Host, address, min_volunteers AS 'min', ";
-  $query.="max_volunteers AS 'max', 'transportation', description, tools, Projects.additional_comments AS 'comments', ";
+  $query="SELECT Project_Number AS 'num', Host, address, min_volunteers AS 'min', ";
+  $query.="max_volunteers AS 'max', Transportation.type as transportation, description, tools, Projects.additional_comments AS 'comments', ";
   $query.="rain, rain_proj, ";
-  $query.="proj_restriction.restriction AS 'restrictions', proj_category.cat AS 'category' from Projects join proj_restriction on Projects.restriction_violation=proj_restriction.number ";
-  $query.="join proj_category on Projects.category=proj_category.number";
+  $query.="restriction_violation AS 'restrictions', proj_category.cat AS 'category', Approvals.status from Projects ";
+  $query.="join proj_category on Projects.category=proj_category.number ";
+	$query.="left outer join Transportation on Projects.transportation=Transportation.number ";
+	$query.="right outer join Approvals on Approvals.project=Projects.Project_Number";
 	//$query.="join Approvals on Approvals.project=Projects.Project_number";
 
 	$result = $mysqli->query($query);
@@ -26,11 +28,17 @@
     while ($row = $result->fetch_assoc())  {
       echo "<tr>";
 			echo "<td style='text-align:center'>".$row["num"]."</td>";
-      echo "<td style='text-align:center'>".$row["Host"]."</td>";
+      // echo "<td style='text-align:center'>".$row["Host"]."</td>";
+			echo "<td>&nbsp;<a href='Hosts.php?host=".$row['Host']."'>".$row["Host"]."</a>&nbsp;&nbsp;</td>";
       echo "<td style='text-align:center'>".$row["address"]."</td>";
       echo "<td style='text-align:center'>".$row["min"]."</td>";
       echo "<td style='text-align:center'>".$row["max"]."</td>";
-			echo "<td style='text-align:center'>".$row["transportation"]."</td>";
+			if($row["transportation"] == NULL){
+				echo "<td>&nbsp;<a href='transport.php?project=".$row['num']."'>None</a>&nbsp;&nbsp;</td>";
+			}
+			else{
+				echo "<td>&nbsp;<a href='transport.php?project=".$row['num']."'>".$row["transportation"]."</a>&nbsp;&nbsp;</td>";
+			}
       echo "<td style='text-align:center'>".$row["description"]."</td>";
       echo "<td style='text-align:center'>".$row["tools"]."</td>";
       echo "<td style='text-align:center'>".$row["comments"]."</td>";
@@ -38,7 +46,10 @@
       echo "<td style='text-align:center'>".$row["rain_proj"]."</td>";
       echo "<td style='text-align:center'>".$row["restrictions"]."</td>";
       echo "<td style='text-align:center'>".$row["category"]."</td>";
-			echo "<td style='text-align:center'>".$row["status"]."</td>";
+			// echo "<td style='text-align:center'>".$row["status"]."</td>";
+			echo "<td>&nbsp;<a href='approvals.php?project=".$row['num']."'>".$row["status"]."</a>&nbsp;&nbsp;</td>";
+			echo "<td>&nbsp;<a href='editProject.php?project=".urlencode($row["num"])."'>Edit</a>&nbsp;&nbsp;</td>";
+			echo "<td>&nbsp;<a href='deleteProject.php?project=".urlencode($row["num"])."' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
       echo "</tr>";
       // echo "<td>&nbsp;<a href='edit.php?vol_number=".urlencode($row["vol_number"])."'>Edit</a>&nbsp;&nbsp;</td>";
       // echo "<td>&nbsp;<a href='delete.php?vol_number=".urlencode($row["vol_number"])." ' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
