@@ -13,10 +13,11 @@
 	echo "<div class='row'>";
 	echo "<label for='left-label' class='left inline'>";
 
+// && (isset($_POST["descrip"]) && $_POST["descrip"] !== "") && (isset($_POST["tools"]) && $_POST["tools"] !== "") && (isset($_POST["comments"]) && $_POST["comments"] !== "") && (isset($_POST["rain_proj"]) && $_POST["rain_proj"] !== "")
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
 		//makes sure you filled in all boxes
-		if( (isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") && (isset($_POST["address"]) && $_POST["address"] !== "") &&(isset($_POST["min"]) && $_POST["min"] !== "") && (isset($_POST["max"]) && $_POST["max"] !== "") && (isset($_POST["cat"]) && $_POST["cat"] !== "") && (isset($_POST["descrip"]) && $_POST["descrip"] !== "") && (isset($_POST["tools"]) && $_POST["tools"] !== "") && (isset($_POST["comments"]) && $_POST["comments"] !== "") && (isset($_POST["rain"]) && $_POST["rain"] !== "") && (isset($_POST["rain_proj"]) && $_POST["rain_proj"] !== "") && (isset($_POST["restrict"]) && $_POST["restrict"] !== "")){
+		if( (isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") && (isset($_POST["address"]) && $_POST["address"] !== "") &&(isset($_POST["min"]) && $_POST["min"] !== "") && (isset($_POST["max"]) && $_POST["max"] !== "") && (isset($_POST["cat"]) && $_POST["cat"] !== "") && (isset($_POST["rain"]) && $_POST["rain"] !== "") && (isset($_POST["restrict"]) && $_POST["restrict"] !== "")){
 
 				//creates query to find the max volunteer number in order to later increment it
         $max = "Select max(Project_number) AS max from Projects";
@@ -36,6 +37,11 @@
             $host_num = $row['host_number'];
           }
         }
+
+				$restriction = "";
+				foreach($_POST['restrict'] as $selected){
+					$restriction .= $selected.", ";
+				}
 				//create query to insert the person into the database
 				//(no project number assigned because that does not occur at registration)
 				$query = "INSERT INTO Projects ";
@@ -53,18 +59,24 @@
 				$query.="'".$_POST["comments"]."', ";
         $query.="'".$_POST["rain"]."', ";
         $query.="'".$_POST["rain_proj"]."', ";
-				$query.="(Select number from proj_restriction WHERE restriction = '".$_POST["restrict"]."'))";
+				$query.="'".$restriction."')";
 
-				echo $query;
 				//execute query
 				$result = $mysqli->query($query);
+
+				$query2 = "INSERT INTO Approvals ";
+				$query2.="VALUES (";
+				$query2.=$max2.", 2, 'no', 'none', ".$max2.")";
+
+				//execute query
+				$result2 = $mysqli->query($query2);
 
 				//checks if there is a result
 		if($result) {
 			//if added to the database posts and redirects to volunteer table
 			// $_SESSION["message"] = "Project was registered";
-			// 	header("Location: registerProject.php");
-			// 	exit;
+				// header("Location: registerProject.php");
+				// exit;
 				redirect_to("viewHostProjects.php?id=".$host_num);
 				exit;
 			}
@@ -118,13 +130,16 @@
 
             echo "Description of the project that will happen if it rains:<input type='text' name='rain_proj' value='' />";
 
-						echo "Select any physical restrictions we may need to consider:<select name='restrict'>";
+						echo "Select any physical restrictions we may need to consider:";
+						echo "<br />";
               // options for organizations to select gathered from the database
                 $query = "Select restriction from proj_restriction";
                 $result = $mysqli->query($query);
                 if($result && $result->num_rows >= 1){
                   while($row=$result->fetch_assoc()){
-                    echo "<option value = '".$row['restriction']."'>".$row['restriction']."</option>";
+										echo "<INPUT TYPE='checkbox' Name='restrict[]' value = '".$row['restriction']."'>".$row['restriction'];
+										echo "<br />";
+                    //echo "<option value = '".$row['restriction']."'>".$row['restriction']."</option>";
                   }
                 }
             echo "</select>";
@@ -139,7 +154,6 @@
 	echo "</label>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
-	echo "<br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
 	echo "<br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
 ?>
 
