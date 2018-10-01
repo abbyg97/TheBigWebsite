@@ -29,18 +29,19 @@
         }
 				//create query to insert the person into the database
 				//(no project number assigned because that does not occur at registration)
+				//https://stackoverflow.com/questions/6278296/extract-numbers-from-a-string -- for formatting phone number
 				$query = "INSERT INTO Host ";
 				$query .= "(host_number, first_name, last_name, phone, second_phone, email, alt_first_name, alt_last_name, alt_phone, alt_email) ";
 				$query.="VALUES (";
         $query.=$max2.", ";
 				$query.="'".$_POST["fname"]."', ";
 				$query.="'".$_POST["lname"]."', ";
-        $query.="".$_POST["number"].", ";
-				$query.="".$_POST["sec_num"].", ";
+        $query.="".preg_replace('/[^0-9]/', '', $_POST["number"]).", ";
+				$query.="".preg_replace('/[^0-9]/', '', $_POST["sec_num"]).", ";
 				$query.="'".$_POST["email"]."', ";
         $query.="'".$_POST["alt_fname"]."', ";
         $query.="'".$_POST["alt_lname"]."', ";
-				$query.="".$_POST["alt_phone"].", ";
+				$query.="".preg_replace('/[^0-9]/', '', $_POST["alt_phone"]).", ";
 				$query.="'".$_POST["alt_email"]."')";
 
 				//execute query
