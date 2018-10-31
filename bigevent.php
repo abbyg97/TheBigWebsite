@@ -10,13 +10,8 @@
 
 ?>
 <?php
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//     Step 7.  Check username and password.  If all is good then set $_SESSION and log in
-//				NOTE:  some of your code may be taken from addLogin.php step for, but you
-//					   will need to be sure and set the $_SESSION variables
+					  
 if (isset($_POST["submitvol"])) {
-  //Libby bigevent2018
 		if(isset($_POST["username"]) && $_POST["username"] !=="" && isset($_POST["password"]) && $_POST["password"] !== ""){
       $username = $_POST["username"];
 			$password = $_POST["password"];
