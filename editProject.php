@@ -5,13 +5,16 @@
 	new_header("Here is your project Information", "editProject.php");
 	//connect to database
 	$mysqli = db_connection();
+
 	//output message set by later conditions
 	if (($output = message()) !== null) {
 		echo $output;
 	}
 	if (isset($_POST["submit"])) {
 		//ID set to be the volunteer number (primary key)
+
 		$num = $_GET["project"];
+		$host = $_GET["host"];
 
     $restriction = "";
     foreach($_POST['restrict'] as $selected){
@@ -38,14 +41,14 @@
 		//check that $result was successful
 		if($result) {
 			$_SESSION["message"] = "Project information has been changed";
+			redirect_to("viewHostProjects.php?id=".$host);
 		}
 		else {
-			// $_SESSION["message"] = "Error! Could not make updates";
-      echo $query;
+			$_SESSION["message"] = "Error! Could not make updates";
 		}
 		//back to volunteer chart
-		header("Location: editProject.php");
-		exit;
+		// header("Location: editProject.php");
+		// exit;
 	}
 	else {
 		//if there is a vol_number passed select the values associated with that ID
@@ -54,6 +57,9 @@
 			$query = "select * from Projects where Project_Number=".$num;
 			$result = $mysqli->query($query);
 		}
+		if(isset($_GET["host"]) && $_GET["host"] !== ""){
+			$host=$_GET["host"];
+		}
 
 		//Process query
 		if ($result && $result->num_rows > 0)  {
@@ -61,11 +67,11 @@
 			echo "<div class='row'>";
 			echo "<label for='left-label' class='left inline'>";
 
-			echo "<h3>Edit Your Project Information</h3>";
+			echo "<h3 style='padding-left: 3%;'>Edit Your Project Information</h3>";
 
 			//create form to update Query
 			//set textboxes to already be filled with current value in order for person to see what they previously entered
-			echo "<p><form action= 'editProject.php?project={$num}' method='post'>";
+			echo "<p><form action= 'editProject.php?project=".$num."&host=".$host."' method='post' style='width: 50%; padding-left: 8%;'>";
 
               echo "Address:<input type='text' name='address' value='".$row["address"]."' />";
 
@@ -75,11 +81,16 @@
 
               echo "Select your category:<select name='cat'>";
                 // options for organizations to select gathered from the database
-                  $query2 = "Select cat from proj_category";
+                  $query2 = "Select number, cat from proj_category";
                   $result2 = $mysqli->query($query2);
                   if($result2 && $result2->num_rows >= 1){
                     while($row2=$result2->fetch_assoc()){
-                      echo "<option value = '".$row2['cat']."'>".$row2['cat']."</option>";
+											if($row['category'] === $row2['number']){
+												echo"<option selected='selected'>".$row2['cat']."</option>";
+											}
+											else{
+												echo "<option value = '".$row2['cat']."'>".$row2['cat']."</option>";
+											}
                     }
                   }
               echo "</select>";
@@ -91,8 +102,14 @@
                 echo "Additional Comments:<input type='text' name='comments' value='".$row["additional_comments"]."' />";
 
                 echo "Do you have a project volunteers can do if it rains?:<select name='rain'>";
-                  echo "<option value='yes'>Yes</option>";
-                  echo "<option value='no'>No</option>";
+									if($row['rain'] === 'yes'){
+										echo"<option selected='selected'>Yes</option>";
+										echo "<option value = 'no'>No</option>";
+									}
+									else{
+										echo"<option selected='selected'>No</option>";
+										echo "<option value = 'yes'>Yes</option>";
+									}
                 echo "</select>";
 
                 echo "Description of the project that will happen if it rains:<input type='text' name='rain_proj' value='".$row["rain_proj"]."' />";
@@ -100,11 +117,17 @@
               echo "Select any physical restrictions we may need to consider:";
               echo "<br />";
                 // options for organizations to select gathered from the database
-                  $query = "Select restriction from proj_restriction";
-                  $result = $mysqli->query($query);
-                  if($result && $result->num_rows >= 1){
-                    while($row=$result->fetch_assoc()){
-                      echo "<INPUT TYPE='checkbox' Name='restrict[]' value = '".$row['restriction']."'>".$row['restriction'];
+
+                  $query2 = "Select restriction from proj_restriction";
+                  $result2 = $mysqli->query($query2);
+                  if($result2 && $result2->num_rows >= 1){
+                    while($row2=$result2->fetch_assoc()){
+											if(strpos($row["restriction_violation"], $row2["restriction"]) !== false){
+												echo "<INPUT TYPE='checkbox' Name='restrict[]' value = '".$row2['restriction']."' checked>".$row2['restriction'];
+											}
+											else{
+												echo "<INPUT TYPE='checkbox' Name='restrict[]' value = '".$row2['restriction']."'>".$row2['restriction'];
+											}
                       echo "<br />";
                       //echo "<option value = '".$row['restriction']."'>".$row['restriction']."</option>";
                     }
@@ -116,21 +139,11 @@
 
 		echo "</form>";
 
-///////////////////////////////////////////////////////////////////////////////////////////
-
-
-			echo "<br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
+			echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
 			echo "</label>";
 			echo "</div>";
+		}
 
-		}
-		//Query failed to exit. Return to volunteer.php and output error
-		else {
-			$_SESSION["message"] = "Did update but still in this loop";
-			header("Location: bigevent.php");
-			exit;
-      $query;
-		}
 	}
 
 ?>
