@@ -8,6 +8,8 @@
 		echo $output;
 	}
 
+	$host=$_GET["host"];
+
 	//puts in headers on web page
 	echo "<h3>Register</h3>";
 	echo "<div class='row'>";
@@ -17,7 +19,8 @@
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
 		//makes sure you filled in all boxes
-		if( (isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") && (isset($_POST["address"]) && $_POST["address"] !== "") &&(isset($_POST["min"]) && $_POST["min"] !== "") && (isset($_POST["max"]) && $_POST["max"] !== "") && (isset($_POST["cat"]) && $_POST["cat"] !== "") && (isset($_POST["rain"]) && $_POST["rain"] !== "") && (isset($_POST["restrict"]) && $_POST["restrict"] !== "")){
+		//(isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") &&
+		if( (isset($_POST["address"]) && $_POST["address"] !== "") &&(isset($_POST["min"]) && $_POST["min"] !== "") && (isset($_POST["max"]) && $_POST["max"] !== "") && (isset($_POST["cat"]) && $_POST["cat"] !== "") && (isset($_POST["rain"]) && $_POST["rain"] !== "")){
 
 				//creates query to find the max volunteer number in order to later increment it
         $max = "Select max(Project_number) AS max from Projects";
@@ -29,26 +32,27 @@
           }
         }
 
-				$query1 = "Select host_number from Host where first_name='".$_POST["fname"]."' and last_name='".$_POST["lname"]."'";
-        $result3 = $mysqli->query($query1);
-				//sets max2 to max+ 1 so that that will be the new volunteer number
-        if($result3 && $result3->num_rows >= 1){
-          while($row=$result3->fetch_assoc()){
-            $host_num = $row['host_number'];
-          }
-        }
+				// $query1 = "Select host_number from Host where first_name='".$_POST["fname"]."' and last_name='".$_POST["lname"]."'";
+        // $result3 = $mysqli->query($query1);
+				// //sets max2 to max+ 1 so that that will be the new volunteer number
+        // if($result3 && $result3->num_rows >= 1){
+        //   while($row=$result3->fetch_assoc()){
+        //     $host_num = $row['host_number'];
+        //   }
+        // }
 
 				$restriction = "";
 				foreach($_POST['restrict'] as $selected){
 					$restriction .= $selected.", ";
 				}
+
 				//create query to insert the person into the database
 				//(no project number assigned because that does not occur at registration)
 				$query = "INSERT INTO Projects ";
 				$query .= "(Project_number, Host, address, min_volunteers, max_volunteers, transportation, category, description, tools, additional_comments, rain, rain_proj, restriction_violation) ";
 				$query.="VALUES (";
         $query.=$max2.", ";
-        $query.=$host_num.", ";
+        $query.=$host.", ";
 				$query.="'".$_POST["address"]."', ";
 				$query.="".$_POST["min"].", ";
         $query.="".$_POST["max"].", ";
@@ -77,7 +81,7 @@
 			// $_SESSION["message"] = "Project was registered";
 				// header("Location: registerProject.php");
 				// exit;
-				redirect_to("viewHostProjects.php?id=".$host_num);
+				redirect_to("viewHostProjects.php?id=".$host);
 				exit;
 			}
 			else {
@@ -88,17 +92,17 @@
 		else {
 			//sets message to remind you to fill in all boxes if you forgot one
 			$_SESSION["message"] = "Unable to add person. Fill in all information!";
-			header("Location: registerProject.php");
+			header("Location: registerProject.php?host=".$host);
 			exit;
 		}
 	}
 	else {
 		//creates form
-			echo "<form method='POST' action='registerProject.php'>";
+			echo "<form method='POST' action='registerProject.php?host=".$host."' style='padding-left: 10%;'>";
 
-						echo "Host First Name:<input type='text' name='fname' value='' />";
-
-						echo "Host Last Name:<input type='text' name='lname' value='' />";
+						// echo "Host First Name:<input type='text' name='fname' value='' />";
+						//
+						// echo "Host Last Name:<input type='text' name='lname' value='' />";
 
             echo "Address:<input type='text' name='address' value='' />";
 
@@ -154,7 +158,7 @@
 	echo "</label>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
-	echo "<br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
+	echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
 ?>
 
 
