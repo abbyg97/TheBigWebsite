@@ -21,16 +21,7 @@
 		//makes sure you filled in all boxes
 		//(isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") &&
 		if( (isset($_POST["address"]) && $_POST["address"] !== "") &&(isset($_POST["min"]) && $_POST["min"] !== "") && (isset($_POST["max"]) && $_POST["max"] !== "") && (isset($_POST["cat"]) && $_POST["cat"] !== "") && (isset($_POST["rain"]) && $_POST["rain"] !== "")){
-
-				//creates query to find the max volunteer number in order to later increment it
-        $max = "Select max(Project_number) AS max from Projects";
-        $result2 = $mysqli->query($max);
-				//sets max2 to max+ 1 so that that will be the new volunteer number
-        if($result2 && $result2->num_rows >= 1){
-          while($row=$result2->fetch_assoc()){
-            $max2 = $row['max'] + 1;
-          }
-        }
+       
 
 				// $query1 = "Select host_number from Host where first_name='".$_POST["fname"]."' and last_name='".$_POST["lname"]."'";
         // $result3 = $mysqli->query($query1);
@@ -40,7 +31,7 @@
         //     $host_num = $row['host_number'];
         //   }
         // }
-
+}
 				$restriction = "";
 				foreach($_POST['restrict'] as $selected){
 					$restriction .= $selected.", ";
@@ -51,7 +42,6 @@
 				$query = "INSERT INTO Projects ";
 				$query .= "(Project_number, Host, address, min_volunteers, max_volunteers, transportation, category, description, tools, additional_comments, rain, rain_proj, restriction_violation) ";
 				$query.="VALUES (";
-        $query.=$max2.", ";
         $query.=$host.", ";
 				$query.="'".$_POST["address"]."', ";
 				$query.="".$_POST["min"].", ";
