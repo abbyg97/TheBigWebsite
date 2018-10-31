@@ -20,12 +20,18 @@
 
 /********************    Uncomment Once Code Completed  **************************/
 	if ($result && $result->num_rows > 0) {
-		echo "<div class='row'>";
+		echo "<div>";
 		echo "<center>";
     echo "<h2>Here are all projects</h2>";
-    echo "<table>";
-    echo "<tr><th>Project Number</th><th>Host Number</th><th>Address</th><th>Minimum Volunteers</th><th>Maximum Volunteers</th><th>Transportation required</th><th>Description</th><th>Tools requested</th><th>Comments</th><th>Come if it rains?</th><th>Describe the project we would do on a rainy day</th><th>Restrictions</th><th>Category</th><th>Approval Status</th></tr>";
-    while ($row = $result->fetch_assoc())  {
+		echo "</center>";
+		echo "<div class='scrollable'>";
+		//https://mdbootstrap.com/content/bootstrap-table-sort/
+    echo "<table id='projects' class='table table-striped table-bordered table-sm' cellspacing='0' width='100%'>";
+		echo "<thead>";
+    echo "<tr><th class='th-sm'>Project Number<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Host Number<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Address<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Minimum Volunteers<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Maximum Volunteers<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Transportation required<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Description<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Tools requested<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Comments<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Come if it rains?<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Rainy Day Project<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Restrictions<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Category<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th class='th-sm'>Approval Status<i class='fa fa-sort float-right' aria-hidden='true'></i></th><th>Edit Project</th><th>Delete Project</th></tr>";
+		echo "</thead>";
+		echo "<tbody>";
+		while ($row = $result->fetch_assoc())  {
       echo "<tr>";
 			echo "<td style='text-align:center'>".$row["num"]."</td>";
       // echo "<td style='text-align:center'>".$row["Host"]."</td>";
@@ -48,15 +54,28 @@
       echo "<td style='text-align:center'>".$row["category"]."</td>";
 			// echo "<td style='text-align:center'>".$row["status"]."</td>";
 			echo "<td>&nbsp;<a href='approvals.php?project=".$row['num']."'>".$row["status"]."</a>&nbsp;&nbsp;</td>";
-			echo "<td>&nbsp;<a href='editProject.php?project=".urlencode($row["num"])."'>Edit</a>&nbsp;&nbsp;</td>";
+			echo "<td>&nbsp;<a href='editProject.php?project=".urlencode($row["num"])."&host=".$row['Host']."'>Edit</a>&nbsp;&nbsp;</td>";
 			echo "<td>&nbsp;<a href='deleteProject.php?project=".urlencode($row["num"])."' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
       echo "</tr>";
       // echo "<td>&nbsp;<a href='edit.php?vol_number=".urlencode($row["vol_number"])."'>Edit</a>&nbsp;&nbsp;</td>";
       // echo "<td>&nbsp;<a href='delete.php?vol_number=".urlencode($row["vol_number"])." ' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
 		}
+		echo "</tbody>";
 		echo "</table>";
-		echo "</center>";
 		echo "</div>";
+		//echo "</center>";
+		echo "</div>";
+		echo "<center>";
+ 	 echo "<div>";
+         echo "<form class='form-horizontal' action='excelProjects.php' method='post' name='upload_excel' enctype='multipart/form-data'>";
+           	echo "<div class='form-group'>";
+               	echo "<div class='col-md-4 col-md-offset-4'>";
+                     echo "<input type='submit' name='Export' class='button tiny round' value='export to excel'/>";
+                         echo "</div>";
+                echo "</div>";
+         echo "</form>";
+ 	 echo "</div>";
+ 	 echo "</center>";
 	}
   echo "<center>";
   echo "<br /><br /><a href='select.php'>Register a Volunteer</a>";
