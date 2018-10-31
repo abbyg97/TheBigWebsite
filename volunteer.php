@@ -18,11 +18,14 @@
 
 /********************    Uncomment Once Code Completed  **************************/
 	if ($result && $result->num_rows > 0) {
-		echo "<div class='row'>";
+		echo "<div>";
 		echo "<center>";
 		echo "<h2>Here are the volunteers</h2>";
-		echo "<table>";
-		echo "<tr><th>First Name</th><th>Last Name</th><th></th></tr>";
+		echo "<table id='projects' class='table table-striped table-bordered table-sm' cellspacing='0' width='50%'>";
+		echo "<thead>";
+		echo "<tr><th class='th-sm'>First Name<i class='fa fa-sort float-right' aria-hidden='true'></th><th class='th-sm'>Last Name<i class='fa fa-sort float-right' aria-hidden='true'></th><th>Edit Info</th></tr>";
+		echo "</thead>";
+		echo "<tbody>";
 		while ($row = $result->fetch_assoc())  {
 			echo "<tr>";
 			echo "<td style='text-align:center'>".$row["first_name"]."</td>";
@@ -37,10 +40,11 @@
 			//Edit should direct to editPeople.php, sending PersonID in URL
 			//Delete should direct to deletePeople.php, sending PersonID in URL - include onclick to confirm delete
       echo "<td>&nbsp;<a href='edit.php?vol_number=".urlencode($row["vol_number"])."'>Edit</a>&nbsp;&nbsp;</td>";
-      echo "<td>&nbsp;<a href='delete.php?vol_number=".urlencode($row["vol_number"])." ' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
+      //echo "<td>&nbsp;<a href='delete.php?vol_number=".urlencode($row["vol_number"])." ' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
 
 			echo "</tr>";
 		}
+		echo "</tbody>";
 		echo "</table>";
 		echo "</center>";
 		echo "</div>";
@@ -49,7 +53,7 @@
   echo "<br /><br /><a href='register.php'>Register a Volunteer</a>";
   echo "</center>";
 
-	echo "<br /><br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
+	echo "<br /><br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
 
 ?>
 
