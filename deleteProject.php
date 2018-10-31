@@ -23,7 +23,7 @@
 			$_SESSION["message"] = "Project successfully deleted!";
 			$output = message();
 			echo $output;
-			echo "<br /><br /><p>&laquo:<a href='bigevent.php'>Back to Main Page</a>";
+			echo "<br /><br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
 
 		}
 		else {
