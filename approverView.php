@@ -1,4 +1,6 @@
 <?php
+//this page allows approval status to be updated
+//page what is seen by specific committee members -- only see the projects they are expected to approve
 	require_once("./included_functions.php");
   require_once("session.php");
 	new_header("Approval Status Edits", "");
@@ -7,8 +9,9 @@
 	if (($output = message()) !== null) {
 		echo $output;
 	}
-
+	//grabs which approver's projects to select
   $approver=$_GET['approver'];
+	//the project of which the approval status needs to be updated
   $num=$_GET["project"];
 
 	if (isset($_POST["submit"])) {
@@ -39,6 +42,7 @@
 		}
   }
 	else if($num){
+		//form to change the approval status of a given project
 		echo "<form method='POST' action='approverView.php?project=".$num."&approver=".$approver."'>";
 
 		$query="Select status, additional_comments from Approvals where project=".$num;
@@ -68,6 +72,7 @@
 		"no project selected";
 	}
 
+	//selects te name of the approver based on the approver number
   $query="Select first_name, last_name from Committee_Members where number=".$approver;
   $result=$mysqli->query($query);
 	echo "<center>";
@@ -76,6 +81,7 @@
   }
 	echo "</center>";
 
+	//queries for the projects of the given approver
   echo "<div class='row'>";
 	echo "<label for='left-label' class='left inline'>";
 	if(isset($_GET['approver'])){
@@ -98,11 +104,9 @@
 		$query.="right outer join Approvals on Approvals.project=Projects.Project_Number";
 	}
 
-	//$query.="join Approvals on Approvals.project=Projects.Project_number";
-
 	$result = $mysqli->query($query);
 
-/********************    Uncomment Once Code Completed  **************************/
+	//outputs selected projects in a table
 	if ($result && $result->num_rows > 0) {
 		echo "<div class='row'>";
 		echo "<center>";
@@ -130,11 +134,6 @@
 		echo "</center>";
 		echo "</div>";
 	}
-
-
-	//condition to check if you submited something
-
-
 
 	echo "</label>";
 	echo "</div>";
