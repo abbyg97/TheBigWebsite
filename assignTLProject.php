@@ -1,6 +1,8 @@
 <?php
 	require_once("./included_functions.php");
   require_once("session.php");
+	//from session.php; checks to see if user is logged in
+	verify_login();
 	new_header("Transportation Assignment", "");
 	//outputs message letting you know if it worked or not
 	$mysqli = db_connection();
@@ -8,19 +10,23 @@
 		echo $output;
 	}
 
+	//tl_number
   $num=$_GET["num"];
 
-	//puts in headers on web page
+	//centers content
+	echo "<div style='width: 65%; padding-left: 35%;'>";
+	//centers header
+	echo "<center>";
 	echo "<h3>Assign Project</h3>";
-	echo "<div class='row' style='padding-left: 4%;'>";
-	echo "<label for='left-label' class='left inline'>";
+	echo "</center>";
+	//aligns text to left of the centered div
+	echo "<div style='text-align: left;'>";
 
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
 		//makes sure you filled in all boxes
 		if(isset($_POST["project"])){
 				$query="UPDATE Team_Leaders SET tl_project=".$_POST['project']." WHERE tl_number=".$num;
-        // echo $query;
 				//execute query
 				$result = $mysqli->query($query);
 
@@ -45,7 +51,7 @@
   }
 
 	else {
-		//creates form
+		//creates form to changes project number of a team leader
 			echo "<form method='POST' action='assignTLProject.php?num=".$num."'>";
 
       echo "Select new project:<select name='project'>";
@@ -57,11 +63,11 @@
 						$value = $row2["tl_project"];
 					}
 				}
-
+					//selects all active project numbers
           $query = "Select Project_Number from Projects ORDER BY Project_Number";
           $result = $mysqli->query($query);
           if($result && $result->num_rows >= 1){
-            while($row=$result->fetch_assoc()){ //fix this
+            while($row=$result->fetch_assoc()){
 							if($value === $row['Project_Number']){
 								echo"<option selected='selected'>".$row["Project_Number"]."</option>";
 							}
@@ -81,7 +87,7 @@
 
 
 	}
-	echo "</label>";
+	echo "</div>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
 	echo "<br /><p>&laquo:<a href='execProjectView.php'>Back to Projects</a>";
