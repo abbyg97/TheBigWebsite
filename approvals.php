@@ -2,18 +2,25 @@
 	require_once("./included_functions.php");
   require_once("session.php");
 	new_header("Approval Status Edits", "");
-	//outputs message letting you know if it worked or not
+	//makes sure user is logged in -- sessions.php
+	verify_login();
 	$mysqli = db_connection();
+	//outputs message letting you know if it worked or not
 	if (($output = message()) !== null) {
 		echo $output;
 	}
 
+	//grabs the project number passed over
   $num=$_GET["project"];
 
-	//puts in headers on web page
+	//centers content
+	echo "<div style='width: 65%; padding-left: 35%;'>";
+	//centers header
+	echo "<center>";
 	echo "<h3>Edit Approval Status</h3>";
-	echo "<div class='row' style='padding-left: 4%;'>";
-	echo "<label for='left-label' class='left inline'>";
+	echo "</center>";
+	//aligns text to left of the centered div
+	echo "<div style='text-align: left;'>";
 
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
@@ -27,7 +34,7 @@
 				//execute query
 				$result2 = $mysqli->query($query2);
 
-				//checks if there is a result
+			//checks if there is a result
   		if($result) {
   			//if added to the database posts and redirects to volunteer table
   			$_SESSION["message"] = "Has been updated";
@@ -77,11 +84,11 @@
 
 
 	}
-	echo "</label>";
+	echo "</div>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
 	echo "<br /><p>&laquo:<a href='execProjectView.php'>Back to Projects</a>";
 ?>
 
 
-<?php new_footer("Who's Who", $mysqli); ?>
+<?php new_footer("Big Event", $mysqli); ?>
