@@ -21,6 +21,7 @@
 
   if (isset($_FILES['teamleaders'])) {
 
+		//deletes all team leaders before uploading file
 		$query = "DELETE from Team_Leaders";
 		$result = $mysqli->query($query);
 
@@ -29,9 +30,9 @@
 
 		if($_FILES['teamleaders']['size']>0){
 			//could run into format issues because I manually adjusted the csv get_included_files
-			//should we delete all team leaders before uploading? I think yes
 			//https://www.cloudways.com/blog/import-export-csv-using-php-and-mysql/
 			$tls = fopen($tmpName, "r");
+			//splits data by , in order to populate database
 			while(($getData = fgetcsv($tls, 1000, ",")) !== FALSE){
 				$sql = "INSERT INTO Team_Leaders VALUES (".$getData[0].", '".$getData[1]."', '".$getData[2]."', ".$getData[3].", '".$getData[4]."', ".$getData[5].")";
 				$result = $mysqli->query($sql);

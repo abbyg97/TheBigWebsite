@@ -8,21 +8,23 @@
 		echo $output;
 	}
 
+	//project number that you want to change the transportation assignment of
   $num=$_GET["project"];
 
 	//puts in headers on web page
-	echo "<h3 style='padding-left: 2%;'>Assign Transportation</h3>";
-	echo "<div class='row' style='padding-left: 5%;'>";
-	echo "<label for='left-label' class='left inline'>";
+	echo "<div style='width: 65%; padding-left: 35%;'>";
+	echo "<center>";
+	echo "<h3>Assign Transportation</h3>";
+	echo "</center>";
+	echo "<div style='text-align: left;'>";
 
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
 		//makes sure you filled in all boxes
 		if(isset($_POST["transport"]) && $_POST["transport"] !== ""){
-				//create query to insert the person into the database
+				//create query to update transportation assignment of
         $query2 = "Select number from Transportation where type='".$_POST['transport']."'";
         $result2 = $mysqli->query($query2);
-				//sets max2 to max+ 1 so that that will be the new volunteer number
         if($result2 && $result2->num_rows >= 1){
           while($row=$result2->fetch_assoc()){
             $transportNum = $row['number'];
@@ -34,7 +36,7 @@
 
 				//checks if there is a result
   		if($result) {
-  			//if added to the database posts and redirects to volunteer table
+  			//if added to the database posts and redirects to project table
   			$_SESSION["message"] = "Has been updated";
   				redirect_to("execProjectView.php");
   				exit;
@@ -53,7 +55,7 @@
 
 				//checks if there is a result
 			if($result) {
-				//if added to the database posts and redirects to volunteer table
+				//if added to the database posts and redirects to project table
 				$_SESSION["message"] = "Has been updated";
 					redirect_to("execProjectView.php");
 					exit;
@@ -94,13 +96,11 @@
 							else{
 								echo "<option value = '".$row['type']."'>".$row['type']."</option>";
 							}
+							//option selected if that is what it was previously set to
 							if($row2['transportation'] === null && $row['number'] == 2){
 									echo"<option selected='selected'>None</option>";
 							}
-							//
-							// else{
-							// 	echo "<option value = ''>None</option>";
-							// }
+
 						}
 					}
 				}
@@ -119,7 +119,7 @@
 
 
 	}
-	echo "</label>";
+	echo "</div>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
 	echo "<br /><p>&laquo:<a href='execProjectView.php'>Back to Projects</a>";

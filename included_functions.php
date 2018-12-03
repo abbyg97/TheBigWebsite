@@ -11,9 +11,6 @@
 		if($mysqli->connect_errno) {
 			die("Could not connect to server!<br />");
 		}
-		else {
-				//echo "Successful connection to ".DBNAME."<hr />";
-		}
 		return $mysqli;
 	}
 
@@ -31,8 +28,9 @@
     echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js' integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q' crossorigin='anonymous'></script>";
     echo "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js' integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl' crossorigin='anonymous'></script>";
 		echo "<script type='text/javascript' src='/~agarrett/MDB-Free_4.5.12/js/addons/datatables.min.js'></script>";
-		// echo "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js' integrity='sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ' crossorigin='anonymous'></script>";
 		echo "<script type='text/javascript'>";
+
+		//needed to make tables sortable and searchable
 		echo "$(document).ready(function () {";
 		  echo "$('#projects').DataTable({";
 		    echo "'ordering': true";
@@ -53,50 +51,69 @@
 		      echo "<li class='nav-item active'>";
 		        echo "<a class='nav-link' href='/~agarrett/index.php'>Home <span class='sr-only'>(current)</span></a>";
 		      echo "</li>";
-		      echo "<li class='nav-item'>";
-		        echo "<a class='nav-link' href='/~agarrett/register.php'>Volunteers</a>";
-		      echo "</li>";
+					//only the exec members see this option
+					if (isset($_SESSION["username"]) && isset($_SESSION["permission"]) && $_SESSION["permission"] === "4") {
+			      echo "<li class='nav-item'>";
+			        echo "<a class='nav-link' href='/~agarrett/register.php'>Volunteers</a>";
+			      echo "</li>";
+					}
 		      echo "<li class='nav-item'>";
 		        echo "<a class='nav-link' href='/~agarrett/registerHost.php'>Host</a>";
 		      echo "</li>";
-		      echo "<li class='nav-item dropdown'>";
-		        echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-		          echo "Executive Options";
-		        echo "</a>";
-		        echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-		          echo "<a class='dropdown-item' href='/~agarrett/volunteer.php'>View Volunteers</a>";
-		          echo "<a class='dropdown-item' href='/~agarrett/execProjectView.php'>View Projects</a>";
-		          echo "<a class='dropdown-item' href='/~agarrett/teamleaders.php'>View Team Leaders</a>";
-		          echo "<a class='dropdown-item' href='/~agarrett/uploadTL.php'>Upload Team Leaders</a>";
-		          //<!-- <div class="dropdown-divider"></div> -->
-		          echo "<a class='dropdown-item' href='groupVolunteers'>Search for a Specific Group</a>";
-		        echo "</div>";
-						// echo "<li class='nav-item'>";
-			      //   echo "<a class='nav-link' href='/~agarrett/index.php'>Login</a>";
+					//only the exec members see this option
+					if (isset($_SESSION["username"]) && isset($_SESSION["permission"]) && $_SESSION["permission"] === "4") {
+			      echo "<li class='nav-item dropdown'>";
+			        echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+			          echo "Executive Options";
+			        echo "</a>";
+			        echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
+			          echo "<a class='dropdown-item' href='/~agarrett/volunteer.php'>View Volunteers</a>";
+			          echo "<a class='dropdown-item' href='/~agarrett/execProjectView.php'>View Projects</a>";
+			          echo "<a class='dropdown-item' href='/~agarrett/teamleaders.php'>View Team Leaders</a>";
+			          echo "<a class='dropdown-item' href='/~agarrett/uploadTL.php'>Upload Team Leaders</a>";
+			          //<!-- <div class="dropdown-divider"></div> -->
+			          echo "<a class='dropdown-item' href='groupVolunteers'>Search for a Specific Group</a>";
+								echo "<a class='dropdown-item' href='addLogin'>Add Organization or Exec Login</a>";
+			        echo "</div>";
+							// echo "<li class='nav-item'>";
+				      //   echo "<a class='nav-link' href='/~agarrett/index.php'>Login</a>";
+				      echo "</li>";
+						}
+					echo "</ul>";
+					echo "<ul class='navbar-nav ml-auto'>";
+					//see login options if not logged in; see logout if logged in
+					if (isset($_SESSION["username"])) {
+						echo "<li class='nav-item'>";
+			        echo "<a class='nav-link' href='/~agarrett/logout.php'>Logout</a>";
 			      echo "</li>";
-		      //echo "</li>";
-
-					echo "<li class='nav-item dropdown'>";
-						echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-							echo "Login";
-						echo "</a>";
-						echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-							echo "<a class='dropdown-item' href='/~agarrett/bigevent.php'>Volunteer Login</a>";
-							echo "<a class='dropdown-item' href='/~agarrett/hostLogin.php'>Host Login</a>";
-							echo "<a class='dropdown-item' href='/~agarrett/orgLogin.php'>Organization Login</a>";
-							echo "<a class='dropdown-item' href='/~agarrett/execLogin.php'>Exec Login</a>";
-							//<!-- <div class="dropdown-divider"></div> -->
-							//echo "<a class='dropdown-item' href='groupVolunteers'>Search for a Specific Group</a>";
-						echo "</div>";
-						// echo "<li class='nav-item'>";
-						//   echo "<a class='nav-link' href='/~agarrett/index.php'>Login</a>";
-						echo "</li>";
+					}
+					else{
+						echo "<li class='nav-item dropdown'>";
+							echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+								echo "Login";
+							echo "</a>";
+							echo "<div class='dropdown-menu dropdown-menu-right' aria-labelledby='navbarDropdown'>";
+								echo "<a class='dropdown-item' href='/~agarrett/volRegister'>Volunteer Login</a>";
+								echo "<a class='dropdown-item' href='/~agarrett/hostLogin.php'>Host Login</a>";
+								echo "<a class='dropdown-item' href='/~agarrett/orgLogin.php'>Organization Login</a>";
+								echo "<a class='dropdown-item' href='/~agarrett/execLogin.php'>Exec Login</a>";
+							echo "</div>";
+							echo "</li>";
+					}
 		    echo "</ul>";
 		  echo "</div>";
 		echo "</nav>";
+		echo "<style>";
+			echo "body{";
+				echo "background: url('oxford.jpg');";
+				echo "background-size: cover;";
+			echo "}";
+		echo "</style>";
 		echo "<body>";
+
 	}
 
+	//function to have new footer
 	function new_footer($name="Default", $mysqli){
 		echo "<br /><br /><br />";
 	    echo "<h4><div class='text-center'><small>Copyright ".date("M Y").", ".$name."</small></div></h4>";
@@ -115,6 +132,7 @@
 
 	}
 
+	//encrypts password
 	function password_encrypt($password) {
 	  $hash_format = "$2y$10$";   // Use Blowfish with a "cost" of 10
 	  $salt_length = 22; 					// Blowfish salts should be 22-characters or more
@@ -124,6 +142,7 @@
 	  return $hash;
 	}
 
+	//generates salt to encrypt password
 	function generate_salt($length) {
 	  // MD5 returns 32 characters
 	  $unique_random_string = md5(uniqid(mt_rand(), true));
@@ -140,16 +159,14 @@
 		return $salt;
 	}
 
+	//checks password entered and hashed password
 	function password_check($password, $existing_hash) {
 	  // existing hash contains format and salt at start
 	  $hash = crypt($password, $existing_hash);
-		$hash = substr($hash, 0, strlen($existing_hash));
 	  if ($hash === $existing_hash) {
-			//$_SESSION["message"] = "hash1 ".$hash;
 	    return true;
 	  }
 	  else {
-			//$_SESSION["message"] = "hash2 ".$hash." EXISTING ".$existing_hash;
 	    return false;
 	  }
 	}

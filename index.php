@@ -3,6 +3,7 @@
 
 <?php new_header("Big Event","/~agarrett"); ?>
 
+<!--Home page -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -38,15 +39,5 @@
   <h2>Thank you for your involvement with the Big Event on March 23rd</h2>
   </center>
 
-<!-- <a href = "register.php">Register to Volunteer!</a> <br></br>
-<a href = "groupVolunteers.php">View Volunteers</a> <br></br>
-<a href = "selectandView.php">Search for a specific group of Volunteers</a> <br></br>
-<a href = "registerHost.php">Register to be a Host</a> <br></br>
-<a href = "registerProject.php">Register to be a Project</a> <br></br>
-<a href = "viewHostProjects.php">View Your Projects</a> <br></br>
-<a href = "execProjectView.php">Exec Project View</a> <br></br>
-<a href = "teamleaders.php">Team Leaders</a> <br></br>
-<a href = "uploadTL.php">Upload CSV for Team Leaders</a> <br></br>
-<a href = "committeeMembers.php">See approvals</a> <br></br> -->
 
 <?php  new_footer("Big Event", $mysqli); ?>

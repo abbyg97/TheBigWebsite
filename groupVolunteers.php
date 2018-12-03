@@ -1,18 +1,13 @@
 <?php
 	require_once("./included_functions.php");
   require_once("session.php");
+	verify_login();
 	//new header
 	new_header("Your Volunteers", "");
 	$mysqli = db_connection();
 	if (($output = message()) !== null) {
 		echo $output;
 	}
-//
-// fix finding the table
-	// echo "<br />";
-	// echo "<h3 style='padding-left: 1%;'>Select Volunteer Group</h3>";
-	// echo "<div>";
-	// echo "<label for='left-label' class='left inline'>";
 
 	//check if you clicked submit
   if (isset($_POST["submit"])) {
@@ -108,8 +103,12 @@
 			}
 		}
 	else {
-				echo "<div style = 'padding-left: 7%;'>";
-				echo "<form method='POST' action='groupVolunteers.php'  style='width: 25%;'>";
+		echo "<div style='width: 65%; padding-left: 35%;'>";
+		// echo "<center>";
+		// echo "<h3>Assign Transportation</h3>";
+		// echo "</center>";
+		echo "<div style='text-align: left;'>";
+				echo "<form method='POST' action='groupVolunteers.php'>";
 
 					echo "Select a project:<select name='project'>";
 						echo "<option></option>";
@@ -126,8 +125,8 @@
 							echo "<input type='submit' name='submit' class='button tiny round' value='Find Volunteers'>";
 		    echo "</form>";
 
-				echo "<form method='POST' action='groupVolunteers.php' style='width: 25%;'>";
-
+				echo "<form method='POST' action='groupVolunteers.php'>";
+					//select any organization
 					echo "Select your organization:<select name='org'>";
 						echo "<option></option>";
 							$query = "Select name from Organization";
@@ -146,6 +145,8 @@
 	}
 	echo "</label>";
 	echo "</div>";
+	echo "</div>";
+	//echo "</div>";
   echo "<center>";
 	echo "<div class='row'>";
   //link to register a new volunteer -- later will be link to register another project

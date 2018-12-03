@@ -1,6 +1,7 @@
 <?php
 	require_once("./included_functions.php");
   require_once("session.php");
+	require_once("/home/agarrett/DBgarrett.php");
 	new_header("Volunteer Registration", "");
 	//outputs message letting you know if it worked or not
 	$mysqli = db_connection();
@@ -8,25 +9,33 @@
 		echo $output;
 	}
 
+	//stores webID in variable $webID
+	$webID=$_GET['id'];
+
 	//puts in headers on web page
-	echo "<h3>Register</h3>";
-	echo "<div class='row'>";
-	echo "<label for='left-label' class='left inline'>";
+	echo "<div style='width: 65%; padding-left: 35%;'>";
+	echo "<center>";
+	echo "<h3>Register to Volunteer</h3>";
+	echo "</center>";
+	echo "<div style='text-align: left;'>";
 
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
 		//makes sure you filled in all boxes
-		if( (isset($_POST["studentID"]) && $_POST["studentID"] !== "") && (isset($_POST["webID"]) && $_POST["webID"] !== "") && (isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") &&(isset($_POST["email"]) && $_POST["email"] !== "") &&(isset($_POST["transport"]) && $_POST["transport"] !== "") && (isset($_POST["phone"]) && $_POST["phone"] !== "") && (isset($_POST["org"]) && $_POST["org"] !== "")){
+		if( (isset($_POST["studentID"]) && $_POST["studentID"] !== "") && (isset($_POST["webID"]) && $_POST["webID"] !== "") && (isset($_POST["fname"]) && $_POST["fname"] !== "") && (isset($_POST["lname"]) && $_POST["lname"] !== "") &&(isset($_POST["email"]) && $_POST["email"] !== "") &&(isset($_POST["transport"]) && $_POST["transport"] !== "") && (isset($_POST["phone"]) && $_POST["phone"] !== "")){
 
 				$restriction = "";
 				foreach($_POST['restrict'] as $selected){
 					$restriction .= $selected.", ";
 				}
+				//insert volunteer into database
 				//create query to insert the person into the database
 				//(no project number assigned because that does not occur at registration)
 				$query = "INSERT INTO volunteers ";
 				$query .= "(umID, webID, first_name, last_name, email, provide_transport, restrictions, phone_numbers, organization) ";
 				$query.="VALUES (";
+				//uses ? in keeping with PDo notation
+				//$query.="VALUES (?, ?, ?, ?, ?, ";
         $query.=$_POST["studentID"].", ";
 				$query.="'".$_POST["webID"]."', ";
 				$query.="'".$_POST["fname"]."', ";
@@ -39,9 +48,12 @@
 
 				//execute query
 				$result = $mysqli->query($query);
+				// $stmt = $mysqli->prepare($query);
+				// $stmt -> execute([$_POST["studentID"], $_POST["webID"], $_POST["fname"], $_POST["lname"], $_POST["email"]]);
 
 				//checks if there is a result
 		if($result) {
+		// if($stmt) {
 			//if added to the database posts and redirects to volunteer table
 			$_SESSION["message"] = $_POST["fname"]." ".$_POST["lname"]." has been registered";
 				header("Location: index.php");
@@ -64,11 +76,11 @@
 	}
 	else {
 		//creates form
-			echo "<form method='POST' action='register.php' style='padding-left: 8%; max-width: 50%;'>";
+			echo "<form method='POST' action='register.php'>";
 
 						echo "StudentID Number:<input type='text' name='studentID' value='' />";
 
-						echo "WebID:<input type='text' name='webID' value='' />";
+						echo "WebID:<input type='text' name='webID' value='".$webID."' />";
 
 						echo "First Name:<input type='text' name='fname' value='' />";
 
@@ -121,7 +133,8 @@
 
 
 	}
-	echo "</label>";
+	//echo "</label>";
+	echo "</div>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
 	echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";

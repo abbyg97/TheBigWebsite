@@ -7,9 +7,10 @@
 	if (($output = message()) !== null) {
 		echo $output;
 	}
-
+	//organization number
   $org = $_GET['org'];
 
+//query to get volunteers associated with the organization selected
 $query="select volunteers.first_name, volunteers.last_name, Organization.name as 'name' from volunteers ";
 $query.="join Organization on volunteers.organization=Organization.number WHERE Organization.number=";
 $query.=$org." ORDER BY volunteers.last_name ASC";
@@ -21,11 +22,14 @@ $result = $mysqli->query($query);
 if ($result && $result->num_rows > 0) {
   echo "<div>";
   echo "<center>";
-  //$row = $result->fetch_assoc();
+  //gets name associated with organization number
 	$query2="Select name from Organization where number=".$org;
 	$result2=$mysqli->query($query2);
 	$row2 = $result2->fetch_assoc();
+
+	//sortable table of volunteers registered under that organization
   echo "<h2>Here are the volunteers for ".$row2['name']."</h2>";
+	echo "<div style='width: 25%;'>";
 	echo "<table id='projects' class='table table-striped table-bordered table-sm' cellspacing='0' width='25%'>";
 	echo "<thead>";
 	echo "<tr><th>First Name</th><th>Last Name</th></tr>";
@@ -39,9 +43,12 @@ if ($result && $result->num_rows > 0) {
   }
 	echo "</tbody>";
   echo "</table>";
+	echo "</div>";
   echo "</center>";
   echo "</div>";
 }
 echo "<center>";
-echo "<br /><br /><a href='groupVolunteers.php'>Back to Selecting</a>";
+if (isset($_SESSION["username"]) && isset($_SESSION["permission"]) && $_SESSION["permission"] === "4") {
+	echo "<br /><br /><a href='groupVolunteers.php'>Back to Selecting</a>";
+}
 echo "</center>";

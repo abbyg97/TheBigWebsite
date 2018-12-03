@@ -1,17 +1,28 @@
 <?php
 	require_once("./included_functions.php");
   require_once("session.php");
-	new_header("Volunteer Registration", "");
+	new_header("Host Registration", "");
 	//outputs message letting you know if it worked or not
 	$mysqli = db_connection();
 	if (($output = message()) !== null) {
 		echo $output;
 	}
 
+	// try{
+	// 	$mysqli = new PDO('mysql:host=localhost;dbname=agarrett', USERNAME, PASSWORD);
+	// 	$mysqli -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	// }
+	//
+	// catch (PDOException $e){
+	// 	echo "Error: ".$e->getMessage();
+	// }
+
 	//puts in headers on web page
-	echo "<h3>Register</h3>";
-	echo "<div class='row'>";
-	echo "<label for='left-label' class='left inline'>";
+	echo "<div style='width: 65%; padding-left: 35%;'>";
+	echo "<center>";
+	echo "<h3>Register to be a Host</h3>";
+	echo "</center>";
+	echo "<div style='text-align: left;'>";
 
 	//condition to check if you submited something
   if (isset($_POST["submit"])) {
@@ -23,7 +34,7 @@
 				//https://stackoverflow.com/questions/6278296/extract-numbers-from-a-string -- for formatting phone number
 				$query = "INSERT INTO Host ";
 				$query .= "(first_name, last_name, phone, second_phone, email, alt_first_name, alt_last_name, alt_phone, alt_email) ";
-				$query.="VALUES (";
+				$query.="VALUES ( ";//?, ?, ";
         // $query.=$max2.", ";
 				$query.="'".$_POST["fname"]."', ";
 				$query.="'".$_POST["lname"]."', ";
@@ -32,14 +43,19 @@
 				$query.="'".$_POST["email"]."', ";
         $query.="'".$_POST["alt_fname"]."', ";
         $query.="'".$_POST["alt_lname"]."', ";
+				//$query.="?, ?, ?, ";
 				$query.="".preg_replace('/[^0-9]/', '', $_POST["alt_phone"]).", ";
 				$query.="'".$_POST["alt_email"]."')";
+				//$query.="?)";
+
+				// $stmt = $mysqli->prepare($query);
+				// $stmt -> execute([$_POST["fname"], $_POST["lname"], $_POST["email"], $_POST["alt_fname"], $_POST["alt_lname"], $_POST["alt_phone"]]);
 
 				//execute query
 				$result = $mysqli->query($query);
-
+				//$row=$result->fetch_assoc();
 				//checks if there is a result
-		if($result) {
+		//if($result) {
 			//if added to the database posts and redirects to volunteer table
 			// $_SESSION["message"] = $_POST["fname"]." ".$_POST["lname"]." has been registered";
 			if (isset($_POST["username"]) && $_POST["username"] !== "" && isset($_POST["password"]) &&
@@ -61,20 +77,20 @@
 					}
 					//User does not already exist so add to admins table
 					else {
-						$query2="Select host_number from Host where first_name=".$_POST["first_name"]." and last_name=".$POST_["last_name"];
+						$query2="Select max(host_number) as 'host_number' from Host";
 						$result2 = $mysqli->query($query2);
 						while($row2=$result2->fetch_assoc()){
 							$number = $row2['host_number'];
 						}
-						$query = "INSERT INTO hostLogin ";
-						$query .= "(username, password, permissions, host_number) ";
-						//ended here
-						$query .= "VALUES ('".$username."', '".$password."', 3, ".$number.")";
-						$result = $mysqli->query($query);
-						if ($result) {
-							// $_SESSION["message"] = "User successfully added";
-							// redirect_to("index.php");
-							redirect_to("viewHostProjects.php?id=".$number);
+							$query2 = "insert into hostLogin ";
+							$query2 .= "(username, password, permissions, host_num) ";
+							//ended here
+							$query2 .= "VALUES ('".$username."', '".$password."', 3, ".$number.")";  //".$number."
+							$result2 = $mysqli->query($query2);
+						//}
+						if ($result2) {
+							$_SESSION['username']=$username;
+							redirect_to("registerProject.php?host=".$number); //
 							exit;
 						}
 						else {
@@ -83,22 +99,25 @@
 							exit;
 					}
 				}
-
-
-			}
+			//}
+			// else{
+			// 	$_SESSION["message"] = "Enter username and password";
+			// 	redirect_to("registerHost.php");
+			// 	exit;
+			// }
+		}
 			else {
 				//if a problem occured with adding to the database
-			$_SESSION["message"] = "Error! Could not register ".$_POST["fname"]." ".$_POST["lname"];
-			redirect_to("viewHostProjects.php?id=".$max2);
-			exit;
+				$_SESSION["message"] = "Error! Could not register ".$_POST["fname"]." ".$_POST["lname"];
+				redirect_to("viewHostProjects.php?id=".$max2);
+				exit;
 			}
-		}
 	}
 		else {
-			//sets message to remind you to fill in all boxes if you forgot one
+			//sets message to remind you to fill in all boxes if you forgot one and keeps ones you have already filled in
 			$_SESSION["message"] = "Unable to add person. Fill in all information!";
 
-			echo "<form method='POST' action='registerHost.php' style='padding-left: 15%;'>";
+			echo "<form method='POST' action='registerHost.php'>";
 
 						echo "First Name:<input type='text' name='fname' value='".$_POST['fname']."' />";
 
@@ -137,7 +156,7 @@
 	else {
 		//creates form
 
-			echo "<form method='POST' action='registerHost.php' style='padding-left: 15%;'>";
+			echo "<form method='POST' action='registerHost.php'>";
 
 						echo "First Name:<input type='text' name='fname' value='' />";
 
@@ -170,7 +189,8 @@
 
 
 	}
-	echo "</label>";
+	//echo "</label>";
+	echo "</div>";
 	echo "</div>";
 	//adds link back to main page where you can navigate to what you want to do
 	echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";

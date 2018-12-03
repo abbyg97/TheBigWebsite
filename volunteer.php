@@ -49,6 +49,18 @@
 		echo "</center>";
 		echo "</div>";
 	}
+	echo "<center>";
+	echo "<div>";
+			 echo "<form class='form-horizontal' action='volunteerExcel.php' method='post' name='upload_excel' enctype='multipart/form-data'>";
+					 echo "<div class='form-group'>";
+							 echo "<div class='col-md-4 col-md-offset-4'>";
+									 echo "<input type='submit' name='Export' class='button tiny round' value='export to excel'/>";
+											 echo "</div>";
+							echo "</div>";
+			 echo "</form>";
+	echo "</div>";
+	echo "</center>";
+
   echo "<center>";
   echo "<br /><br /><a href='register.php'>Register a Volunteer</a>";
   echo "</center>";

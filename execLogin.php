@@ -16,6 +16,7 @@ if (isset($_POST["submitadmin"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
+		//selects login information that aligns with the username
     $query = "SELECT * FROM ";
     $query .= "execLogin WHERE ";
     $query .= "username = '".$username."' ";
@@ -24,16 +25,20 @@ if (isset($_POST["submitadmin"])) {
 
     if($result && $result->num_rows > 0){
       $row = $result->fetch_assoc();
+			//checks password using function defined in session.php
       if(password_check($password, $row["password"])){
         $_SESSION["username"]=$row["username"];
+				$_SESSION["permission"]=$row["permissions"];
         redirect_to("execProjectView.php");
       }
       else{
+				//password did not match
         $_SESSION["message"]="Incorrect password";
         redirect_to("execLogin.php");
       }
     }
     else{
+			//username is not in table
       $_SESSION["message"]="Username/Password not found";
       redirect_to("execLogin.php");
     }
@@ -53,6 +58,7 @@ else{
 
     		echo "<h3>Executive Login!</h3>";
 
+				//creates for to allow for login
     		echo "<form action='execLogin.php' method='post'>";
     			echo "<p>Username:<input type='text' name='username' value='' /></p>";
     			echo "<p>Password:<input type='password' name='password' value='' /></p>";

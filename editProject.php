@@ -1,6 +1,8 @@
 <?php
 	require_once("included_functions.php");
   require_once("session.php");
+	//check to see if user logged in
+	verify_login();
 	//set header
 	new_header("Here is your project Information", "editProject.php");
 	//connect to database
@@ -11,11 +13,12 @@
 		echo $output;
 	}
 	if (isset($_POST["submit"])) {
-		//ID set to be the volunteer number (primary key)
-
+		//num set to be the project number (primary key)
 		$num = $_GET["project"];
+		//host set to be host number
 		$host = $_GET["host"];
 
+		//creates string from checked boxes to populate the restrictions column
     $restriction = "";
     foreach($_POST['restrict'] as $selected){
       $restriction .= $selected.", ";
@@ -64,14 +67,15 @@
 		//Process query
 		if ($result && $result->num_rows > 0)  {
 			$row = $result->fetch_assoc();
-			echo "<div class='row'>";
-			echo "<label for='left-label' class='left inline'>";
-
-			echo "<h3 style='padding-left: 3%;'>Edit Your Project Information</h3>";
+			echo "<div style='width: 65%; padding-left: 35%;'>";
+			echo "<center>";
+			echo "<h3>Edit Your Project Information</h3>";
+			echo "</center>";
+			echo "<div style='text-align: left;'>";
 
 			//create form to update Query
 			//set textboxes to already be filled with current value in order for person to see what they previously entered
-			echo "<p><form action= 'editProject.php?project=".$num."&host=".$host."' method='post' style='width: 50%; padding-left: 8%;'>";
+			echo "<p><form action= 'editProject.php?project=".$num."&host=".$host."' method='post'>";
 
               echo "Address:<input type='text' name='address' value='".$row["address"]."' />";
 
@@ -139,9 +143,9 @@
 
 		echo "</form>";
 
-			echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
-			echo "</label>";
-			echo "</div>";
+		echo "</div>";
+		echo "</div>";
+	echo "<br /><p>&laquo:<a href='index.php'>Back to Main Page</a>";
 		}
 
 	}

@@ -16,6 +16,7 @@ if (isset($_POST["submitorg"])) {
       $username = $_POST["username"];
       $password = $_POST["password"];
 
+			//queries for login information
       $query = "SELECT * FROM ";
       $query .= "orgLogin WHERE ";
       $query .= "username = '".$username."' ";
@@ -24,8 +25,10 @@ if (isset($_POST["submitorg"])) {
 
       if($result && $result->num_rows > 0){
         $row = $result->fetch_assoc();
+				//checks to see if password matches stored hashed one
         if(password_check($password, $row["password"])){
           $_SESSION["username"]=$row["username"];
+					$_SESSION["permission"]=$row["permissions"];
           redirect_to("viewGroup.php?org=".$row['org']);
         }
         else{

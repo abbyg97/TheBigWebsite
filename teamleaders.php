@@ -9,11 +9,12 @@
   $query = "Select * from Team_Leaders";
 
   $result=$mysqli->query($query);
-/********************    Uncomment Once Code Completed  **************************/
+
 	if ($result && $result->num_rows > 0) {
 		echo "<div>";
 		echo "<center>";
 		echo "<br />";
+		//sortable table of team leaders
 		echo "<h2>Here are the team leaders</h2>";
 		echo "<table id='projects' class='table table-striped table-bordered table-sm' cellspacing='0' width='80%'>";
 		echo "<thead>";
@@ -28,11 +29,6 @@
       echo "<td style='text-align:center'>".$row["phone"]."</td>";
       echo "<td style='text-align:center'>".$row["email"]."</td>";
       echo "<td>&nbsp;<a href='assignTLProject.php?num=".$row['tl_number']."'>".$row["tl_project"]."</a>&nbsp;&nbsp;</td>";
-			//Edit should direct to editPeople.php, sending PersonID in URL
-			//Delete should direct to deletePeople.php, sending PersonID in URL - include onclick to confirm delete
-      // echo "<td>&nbsp;<a href='edit.php?vol_number=".urlencode($row["vol_number"])."'>Edit</a>&nbsp;&nbsp;</td>";
-      // echo "<td>&nbsp;<a href='delete.php?vol_number=".urlencode($row["vol_number"])." ' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
-
 			echo "</tr>";
 		}
 		echo "</tbody>";
@@ -41,6 +37,7 @@
 		echo "</div>";
 
 	 echo "<center>";
+	 //option to export team leaders to excel
 	 echo "<div>";
         echo "<form class='form-horizontal' action='excelTL.php' method='post' name='upload_excel' enctype='multipart/form-data'>";
           	echo "<div class='form-group'>";

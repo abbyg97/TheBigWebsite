@@ -48,7 +48,7 @@
       echo "<td style='text-align:center'>".$row["restrictions"]."</td>";
       echo "<td style='text-align:center'>".$row["category"]."</td>";
 			echo "<td>&nbsp;<a href='editProject.php?project=".$row["Project_Number"]."&host=".$row['Host']."'>Edit</a>&nbsp;&nbsp;</td>";
-      echo "<td>&nbsp;<a href='deleteProject.php?project=".urlencode($row["Project_Number"])."' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
+      echo "<td>&nbsp;<a href='deleteProject.php?project=".$row["Project_Number"]."&host=".$row['Host']."' onclick='return confirm('Are you sure?');'>Delete</a>&nbsp;&nbsp;</td>";
       echo "</tr>";
 		}
 		echo "</tbody>";

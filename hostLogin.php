@@ -11,25 +11,25 @@
 ?>
 <?php
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//     Step 7.  Check username and password.  If all is good then set $_SESSION and log in
-//				NOTE:  some of your code may be taken from addLogin.php step for, but you
-//					   will need to be sure and set the $_SESSION variables
 if (isset($_POST["submithost"])) {
 		if(isset($_POST["username"]) && $_POST["username"] !=="" && isset($_POST["password"]) && $_POST["password"] !== ""){
 			$username = $_POST["username"];
 			$password = $_POST["password"];
 
+			//check for login information
 			$query = "SELECT * FROM ";
 			$query .= "hostLogin WHERE ";
 			$query .= "username = '".$username."' ";
 			$query .= "LIMIT 1";
 			$result = $mysqli->query($query);
 
+			//if username exists
 			if($result && $result->num_rows > 0){
 				$row = $result->fetch_assoc();
+				//check to see if password matches the stored hashed password
 				if(password_check($password, $row["password"])){
 					$_SESSION["username"]=$row["username"];
+					$_SESSION["permission"]=$row["permissions"];
 					redirect_to("viewHostProjects.php?id=".$row["host_num"]);
 				}
 				else{
@@ -63,7 +63,10 @@ else{
     			echo "<p>Username:<input type='text' name='username' value='' /></p>";
     			echo "<p>Password:<input type='password' name='password' value='' /></p>";
     			echo "<input type='submit' name='submithost' class='button tiny round' value='Host Login'>";
+					echo "<br /><br /><a href='forgot.php'>Forgot Password?</a>";
     		echo "</form>";
+
+
         //echo "</div>";
 
       echo "</label>";
